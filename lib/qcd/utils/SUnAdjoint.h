@@ -34,6 +34,10 @@ class SU_Adjoint : public SU<ncolour> {
   using iSUnAdjointMatrix =
       iScalar<iScalar<iMatrix<vtype, Dimension > > >;
 
+  template<typename vtype>
+  using iSUnAdjointSpinColourMatrix  =
+      iScalar<iMatrix<iMatrix<vtype, Dimension>, Ns> >;
+  
   // Actually the adjoint matrices are real...
   // Consider this overhead... FIXME
   typedef iSUnAdjointMatrix<Complex> AMatrix;
@@ -48,14 +52,32 @@ class SU_Adjoint : public SU<ncolour> {
   typedef Lattice<vAMatrixF> LatticeAdjMatrixF;
   typedef Lattice<vAMatrixD> LatticeAdjMatrixD;
 
+
+  
+  typedef iSUnAdjointSpinColourMatrix<Complex>  ASpinColourMatrix;
+  typedef iSUnAdjointSpinColourMatrix<ComplexF> ASpinColourMatrixF;
+  typedef iSUnAdjointSpinColourMatrix<ComplexD> ASpinColourMatrixD;
+
+  typedef iSUnAdjointSpinColourMatrix<vComplex>  vASpinColourMatrix;
+  typedef iSUnAdjointSpinColourMatrix<vComplexF> vASpinColourMatrixF;
+  typedef iSUnAdjointSpinColourMatrix<vComplexD> vASpinColourMatrixD;
+  
+  typedef Lattice<vASpinColourMatrix>  LatticeAdjSpinColourMatrix;
+  typedef Lattice<vASpinColourMatrixF> LatticeAdjSpinColourMatrixF;
+  typedef Lattice<vASpinColourMatrixD> LatticeAdjSpinColourMatrixD;
+  
+  //  typedef LatticeAdjSpinColourMatrix                LatticeAdjPropagator;
+  // typedef LatticeAdjSpinColourMatrixF               LatticeAdjPropagatorF;
+  // typedef LatticeAdjSpinColourMatrixD               LatticeAdjPropagatorD;
+ 
+
+
   typedef Lattice<iVector<iScalar<iMatrix<vComplex, Dimension> >, Nd> >
       LatticeAdjField;
   typedef Lattice<iVector<iScalar<iMatrix<vComplexF, Dimension> >, Nd> >
       LatticeAdjFieldF;
   typedef Lattice<iVector<iScalar<iMatrix<vComplexD, Dimension> >, Nd> >
       LatticeAdjFieldD;
-
-
 
 
   template <class cplx>

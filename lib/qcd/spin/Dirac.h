@@ -51,27 +51,27 @@ namespace QCD {
       MinusGammaY, 
       MinusGammaZ, 
       MinusGammaT,  
-      MinusGamma5
-      //      GammaXGamma5, // Rest are composite (willing to take hit for two calls sequentially)
-      //      GammaYGamma5, // as they are less commonly used.
-      //      GammaZGamma5, 
-      //      GammaTGamma5,  
-      //      SigmaXY,
-      //      SigmaXZ,
-      //      SigmaYZ,
-      //      SigmaXT,
-      //      SigmaYT,
-      //      SigmaZT,
-      //      MinusGammaXGamma5, easiest to form by composition
-      //      MinusGammaYGamma5, as performance is not critical for these
-      //      MinusGammaZGamma5, 
-      //      MinusGammaTGamma5,  
-      //      MinusSigmaXY,
-      //      MinusSigmaXZ,
-      //      MinusSigmaYZ,
-      //      MinusSigmaXT,
-      //      MinusSigmaYT,
-      //      MinusSigmaZT
+      MinusGamma5,
+      GammaXGamma5, // Rest are composite (willing to take hit for two calls sequentially)
+      GammaYGamma5, // as they are less commonly used.
+      GammaZGamma5, 
+      GammaTGamma5,  
+      SigmaXY,
+      SigmaXZ,
+      SigmaYZ,
+      SigmaXT,
+      SigmaYT,
+      SigmaZT,
+      MinusGammaXGamma5,// easiest to form by composition
+      MinusGammaYGamma5,// as performance is not critical for these
+      MinusGammaZGamma5, 
+      MinusGammaTGamma5,  
+      MinusSigmaXY,
+      MinusSigmaXZ,
+      MinusSigmaYZ,
+      MinusSigmaXT,
+      MinusSigmaYT,
+      MinusSigmaZT
     };
     
     static GammaMatrix GammaMatrices[];

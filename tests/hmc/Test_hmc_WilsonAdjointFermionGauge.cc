@@ -64,9 +64,9 @@ class HmcRunner : public NerscHmcRunnerHirep< TheRepresentations > {
     AdjointRepresentation::LatticeField U(UGrid);
 
     // Gauge action
-    WilsonGaugeActionR Waction(2.25);
+    WilsonGaugeActionR Waction(2.0);
 
-    Real mass = -0.95;
+    Real mass = -1.00;
     FermionAction FermOp(U, *FGrid, *FrbGrid, mass);
 
     ConjugateGradient<FermionField> CG(1.0e-8, 10000, false);
@@ -81,12 +81,13 @@ class HmcRunner : public NerscHmcRunnerHirep< TheRepresentations > {
     // Collect actions
     ActionLevel<LatticeGaugeField, TheRepresentations > Level1(1);
     Level1.push_back(&Nf2);
-
-    ActionLevel<LatticeGaugeField, TheRepresentations > Level2(4);
+       
+ ActionLevel<LatticeGaugeField, TheRepresentations > Level2(4);
     Level2.push_back(&Waction);
 
     TheAction.push_back(Level1);
     TheAction.push_back(Level2);
+    
 
     Run(argc, argv);
   };

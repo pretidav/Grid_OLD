@@ -37,7 +37,7 @@ namespace Grid {
 namespace QCD {
 
 // Here change the allowed (higher) representations
-typedef Representations< FundamentalRepresentation, TwoIndexSymmetricRepresentation > TheRepresentations;
+typedef Representations< FundamentalRepresentation, TwoIndexAntiSymmetricRepresentation > TheRepresentations;
 
 
 class HmcRunner : public NerscHmcRunnerHirep< TheRepresentations > {
@@ -45,8 +45,8 @@ class HmcRunner : public NerscHmcRunnerHirep< TheRepresentations > {
   void BuildTheAction(int argc, char **argv)
 
   {
-    typedef WilsonTwoIndexSymmetricImplR ImplPolicy; // gauge field implemetation for the pseudofermions
-    typedef WilsonTwoIndexSymmetricFermionR FermionAction; // type of lattice fermions (Wilson, DW, ...)
+    typedef WilsonTwoIndexAntiSymmetricImplR ImplPolicy; // gauge field implemetation for the pseudofermions
+    typedef WilsonTwoIndexAntiSymmetricFermionR FermionAction; // type of lattice fermions (Wilson, DW, ...)
     typedef typename FermionAction::FermionField FermionField;
 
     UGrid = SpaceTimeGrid::makeFourDimGrid(
@@ -58,12 +58,12 @@ class HmcRunner : public NerscHmcRunnerHirep< TheRepresentations > {
     FrbGrid = UrbGrid;
 
     // temporarily need a gauge field
-    TwoIndexSymmetricRepresentation::LatticeField U(UGrid);
+    TwoIndexAntiSymmetricRepresentation::LatticeField U(UGrid);
 
     // Gauge action
-    WilsonGaugeActionR Waction(5.6);
+    WilsonGaugeActionR Waction(6.0);
 
-    Real mass = -0.79;
+    Real mass = -0.80;
     FermionAction FermOp(U, *FGrid, *FrbGrid, mass);
 
     ConjugateGradient<FermionField> CG(1.0e-8, 10000, false);

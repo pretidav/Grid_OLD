@@ -527,6 +527,10 @@ namespace Grid {
     typedef WilsonImpl<vComplexF, TwoIndexSymmetricRepresentation > WilsonTwoIndexSymmetricImplF;  // Float
     typedef WilsonImpl<vComplexD, TwoIndexSymmetricRepresentation > WilsonTwoIndexSymmetricImplD;  // Double
 
+    typedef WilsonImpl<vComplex,  TwoIndexAntiSymmetricRepresentation > WilsonTwoIndexAntiSymmetricImplR;   // Real.. whichever prec               
+    typedef WilsonImpl<vComplexF, TwoIndexAntiSymmetricRepresentation > WilsonTwoIndexAntiSymmetricImplF;  // Float                               
+    typedef WilsonImpl<vComplexD, TwoIndexAntiSymmetricRepresentation > WilsonTwoIndexAntiSymmetricImplD;  // Double              
+
     typedef DomainWallVec5dImpl<vComplex ,Nc> DomainWallVec5dImplR; // Real.. whichever prec
     typedef DomainWallVec5dImpl<vComplexF,Nc> DomainWallVec5dImplF; // Float
     typedef DomainWallVec5dImpl<vComplexD,Nc> DomainWallVec5dImplD; // Double

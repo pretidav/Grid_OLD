@@ -28,6 +28,16 @@ class TwoIndexRep {
   // types for the higher representation fields
   typedef typename SU_TwoIndex<ncolour, S>::LatticeTwoIndexMatrix LatticeMatrix;
   typedef typename SU_TwoIndex<ncolour, S>::LatticeTwoIndexField LatticeField;
+
+  typedef typename SU_TwoIndex<ncolour, S>::TISpinColourMatrix SpinColourMatrix;
+  typedef typename SU_TwoIndex<ncolour, S>::LatticeTwoIndexSpinColourMatrix LatticePropagator;
+
+  struct parms{
+    static const int Ns = 3;
+    static const int Nc = 3;
+    static const int Dim = Nc*(Nc+S)/2;
+  };
+
   static const int Dimension = ncolour * (ncolour + S) / 2;
 
   LatticeField U;

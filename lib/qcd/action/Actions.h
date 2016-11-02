@@ -122,7 +122,9 @@ typedef SymanzikGaugeAction<ConjugateGimplD>        ConjugateSymanzikGaugeAction
 
 #define TwoIndexFermOpTemplateInstantiate(A) \
   template class A<WilsonTwoIndexSymmetricImplF>; \
-  template class A<WilsonTwoIndexSymmetricImplD>; 
+  template class A<WilsonTwoIndexSymmetricImplD>; \
+  template class A<WilsonTwoIndexAntiSymmetricImplF>; \
+  template class A<WilsonTwoIndexAntiSymmetricImplD>;
 
 #define FermOp5dVecTemplateInstantiate(A) \
   template class A<DomainWallVec5dImplF>;	\
@@ -187,6 +189,10 @@ typedef WilsonFermion<WilsonAdjImplD> WilsonAdjFermionD;
 typedef WilsonFermion<WilsonTwoIndexSymmetricImplR> WilsonTwoIndexSymmetricFermionR;
 typedef WilsonFermion<WilsonTwoIndexSymmetricImplF> WilsonTwoIndexSymmetricFermionF;
 typedef WilsonFermion<WilsonTwoIndexSymmetricImplD> WilsonTwoIndexSymmetricFermionD;
+
+typedef WilsonFermion<WilsonTwoIndexAntiSymmetricImplR> WilsonTwoIndexAntiSymmetricFermionR;
+typedef WilsonFermion<WilsonTwoIndexAntiSymmetricImplF> WilsonTwoIndexAntiSymmetricFermionF;
+typedef WilsonFermion<WilsonTwoIndexAntiSymmetricImplD> WilsonTwoIndexAntiSymmetricFermionD;
 
 typedef WilsonTMFermion<WilsonImplR> WilsonTMFermionR;
 typedef WilsonTMFermion<WilsonImplF> WilsonTMFermionF;

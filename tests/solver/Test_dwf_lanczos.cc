@@ -70,17 +70,17 @@ int main (int argc, char ** argv)
   params.twists = twists;
   GparityMobiusFermionR  Ddwf(Umu,*FGrid,*FrbGrid,*UGrid,*UrbGrid,mass,M5,mob_b,mob_b-1.,params);
 
-//  MdagMLinearOperator<DomainWallFermionR,LatticeFermion> HermOp(Ddwf);
-//  SchurDiagTwoOperator<DomainWallFermionR,LatticeFermion> HermOp(Ddwf);
-  SchurDiagTwoOperator<GparityMobiusFermionR,FermionField> HermOp(Ddwf);
+  //    MdagMLinearOperator<GparityMobiusFermionR,FermionField> HermOp(Ddwf);
+  //  SchurDiagTwoOperator<DomainWallFermionR,LatticeFermion> HermOp(Ddwf);
+ SchurDiagTwoOperator<GparityMobiusFermionR,FermionField> HermOp(Ddwf);
 //  SchurDiagMooeeOperator<DomainWallFermionR,LatticeFermion> HermOp(Ddwf);
 
-  const int Nstop = 30;
+  const int Nstop = 10;
   const int Nk = 40;
   const int Np = 40;
   const int Nm = Nk+Np;
   const int MaxIt= 10000;
-  RealD resid = 1.0e-8;
+  RealD resid = 1.0e-6;
 
   std::vector<double> Coeffs { 0.,-1.};
   Polynomial<FermionField> PolyX(Coeffs);
@@ -102,7 +102,7 @@ int main (int argc, char ** argv)
   IRL.calc(eval,evec,
 	   src,
 	   Nconv);
-
+  std::cout << " eval = "<<eval<<std::endl;
 
   Grid_finalize();
 }

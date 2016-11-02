@@ -74,5 +74,13 @@ int main (int argc, char ** argv)
   ConjugateGradient<LatticeFermion> CG(1.0e-8,10000);
   CG(HermOp,src,result);
 
+  /*  
+  LatticeFermion check(&Grid);
+  LatticeFermion diff(&Grid);
+  HermOp.Op(result,check);
+  diff= src - check;
+  assert(norm2(diff) < 0.1 );
+  */
+
   Grid_finalize();
 }

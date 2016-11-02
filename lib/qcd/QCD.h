@@ -35,6 +35,11 @@ namespace Grid{
 
 namespace QCD {
 
+  struct qcd{
+    static const int Ns = 4;
+    static const int Nc = 3;
+    static const int Dim = Nc;  
+  };
 
     static const int Xp = 0;
     static const int Yp = 1;
@@ -418,15 +423,15 @@ namespace QCD {
     //////////////////////////////////////////////
     // Fermion <-> propagator assignements
     //////////////////////////////////////////////
-    template <class Prop, class Ferm>
+    template <class Prop, class Ferm, class Theory = qcd>
     void FermToProp(Prop &p, const Ferm &f, const int s, const int c)
     {
-        for(int j = 0; j < Ns; ++j)
+      for(int j = 0; j < Theory::Ns; ++j)
         {
             auto pjs = peekSpin(p, j, s);
             auto fj  = peekSpin(f, j);
             
-            for(int i = 0; i < Nc; ++i)
+            for(int i = 0; i < Theory::Dim; ++i)
             {
                 pokeColour(pjs, peekColour(fj, i), i, c);
             }
@@ -434,15 +439,15 @@ namespace QCD {
         }
     }
     
-    template <class Prop, class Ferm>
+    template <class Prop, class Ferm, class Theory = qcd>
     void PropToFerm(Ferm &f, const Prop &p, const int s, const int c)
     {
-        for(int j = 0; j < Ns; ++j)
+      for(int j = 0; j < Theory::Ns; ++j)
         {
             auto pjs = peekSpin(p, j, s);
             auto fj  = peekSpin(f, j);
             
-            for(int i = 0; i < Nc; ++i)
+            for(int i = 0; i < Theory::Dim; ++i)
             {
                 pokeColour(fj, peekColour(pjs, i, c), i);
             }

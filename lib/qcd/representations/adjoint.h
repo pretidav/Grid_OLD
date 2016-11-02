@@ -20,8 +20,21 @@ class AdjointRep {
  public:
   // typdef to be used by the Representations class in HMC to get the
   // types for the higher representation fields
+
   typedef typename SU_Adjoint<ncolour>::LatticeAdjMatrix LatticeMatrix;
   typedef typename SU_Adjoint<ncolour>::LatticeAdjField LatticeField;
+
+
+  typedef typename SU_Adjoint<ncolour>::ASpinColourMatrix SpinColourMatrix;
+  typedef typename SU_Adjoint<ncolour>::LatticeAdjSpinColourMatrix LatticePropagator;
+
+
+  struct parms{
+   static const int Ns = 4;
+   static const int Nc = 3;
+   static const int Dim = Nc*Nc-1;
+  };
+
   static const int Dimension = ncolour * ncolour - 1;
 
   LatticeField U;

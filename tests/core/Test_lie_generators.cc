@@ -519,14 +519,44 @@ int main(int argc, char** argv) {
             << std::endl;
 }
 
+  /*
+  inline RealD Sign(int a, int b){ return (a!=b) ? (a-b)/fabs(a-b) : 0;}
 
+  int Nindex=3;
+  int Ap[3*2/2][3];
+  int Am[3*2/2][3];
 
+  int contp=0,contm=0;
+  int S1,S2,S3;
 
-
-
-
-
-
+  for (int i=0;i<Nindex;i++){
+    for (int j=0;j<Nindex;j++){
+      for (int k=0;k<Nindex;k++){
+	
+	S1=Sign(i,j);
+	S2=Sign(j,k);
+	S3=Sign(i,k);
+	if (S1*S2*S3>0){
+	  contp++;
+	  Ap[contp][0]=i;
+	  Ap[contp][1]=j;
+	  Ap[contp][2]=k;	
+	}else if (S1*S2*S3<0){
+          contm++;
+          Am[contm][0]=i;
+          Am[contm][1]=j;
+          Am[contm][2]=k;
+	}
+      }
+    }
+  }
+   
+  std::cout<< Ap <<std::endl;
+  std::cout<<"-----"<<std::endl;
+  std::cout<< Am <<std::endl;
+  */
   
+
+
   Grid_finalize();
 }

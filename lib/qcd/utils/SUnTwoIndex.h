@@ -42,6 +42,11 @@ class SU_TwoIndex : public SU<ncolour> {
   template <typename vtype>
   using iSUnTwoIndexMatrix = iScalar<iScalar<iMatrix<vtype, Dimension> > >;
 
+  template<typename vtype>
+    using iSUnTwoIndexSpinColourMatrix  =
+    iScalar<iMatrix<iMatrix<vtype, Dimension>, Ns> >;
+  
+
   typedef iSUnTwoIndexMatrix<Complex> TIMatrix;
   typedef iSUnTwoIndexMatrix<ComplexF> TIMatrixF;
   typedef iSUnTwoIndexMatrix<ComplexD> TIMatrixD;
@@ -53,6 +58,21 @@ class SU_TwoIndex : public SU<ncolour> {
   typedef Lattice<vTIMatrix> LatticeTwoIndexMatrix;
   typedef Lattice<vTIMatrixF> LatticeTwoIndexMatrixF;
   typedef Lattice<vTIMatrixD> LatticeTwoIndexMatrixD;
+
+
+  typedef iSUnTwoIndexSpinColourMatrix<Complex>  TISpinColourMatrix;
+  typedef iSUnTwoIndexSpinColourMatrix<ComplexF> TISpinColourMatrixF;
+  typedef iSUnTwoIndexSpinColourMatrix<ComplexD> TISpinColourMatrixD;
+
+  typedef iSUnTwoIndexSpinColourMatrix<vComplex>  vTISpinColourMatrix;
+  typedef iSUnTwoIndexSpinColourMatrix<vComplexF> vTISpinColourMatrixF;
+  typedef iSUnTwoIndexSpinColourMatrix<vComplexD> vTISpinColourMatrixD;
+
+  typedef Lattice<vTISpinColourMatrix>  LatticeTwoIndexSpinColourMatrix;
+  typedef Lattice<vTISpinColourMatrixF> LatticeTwoIndexSpinColourMatrixF;
+  typedef Lattice<vTISpinColourMatrixD> LatticeTwoIndexSpinColourMatrixD;
+
+
 
   typedef Lattice<iVector<iScalar<iMatrix<vComplex, Dimension> >, Nd> >
       LatticeTwoIndexField;

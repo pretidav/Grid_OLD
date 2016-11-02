@@ -43,7 +43,17 @@ namespace Grid {
       Gamma::MinusGammaY,
       Gamma::MinusGammaZ,
       Gamma::MinusGammaT,
-      Gamma::MinusGamma5
+      Gamma::MinusGamma5,
+      Gamma::GammaXGamma5,
+      Gamma::GammaYGamma5,
+      Gamma::GammaZGamma5,
+      Gamma::GammaTGamma5,
+      Gamma::SigmaXY,
+      Gamma::SigmaXZ,
+      Gamma::SigmaYZ,
+      Gamma::SigmaXT,
+      Gamma::SigmaYT,
+      Gamma::SigmaZT
     };
     const char *Gamma::GammaMatrixNames[] = { 
       "Identity ",
@@ -58,6 +68,16 @@ namespace Grid {
       "-GammaZ  ",
       "-GammaT  ",
       "-Gamma5  ",
+      "GammaXGamma5",
+      "GammaYGamma5",
+      "GammaZGamma5",
+      "GammaTGamma5",
+      "SigmaXY",
+      "SigmaXZ",
+      "SigmaYZ",
+      "SigmaXT",
+      "SigmaYT",
+      "SigmaZT",
       "         "
     };
     

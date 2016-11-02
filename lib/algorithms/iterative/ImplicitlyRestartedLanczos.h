@@ -93,6 +93,7 @@ public:
       Np = Nm-Nk; assert(Np>0);
     };
 
+      /*
     ImplicitlyRestartedLanczos(
 				LinearOperatorBase<Field> &Linop, // op
 			       OperatorFunction<Field> & poly,   // polynmial
@@ -110,7 +111,7 @@ public:
     { 
       Np = Nm-Nk; assert(Np>0);
     };
-
+      */
     /////////////////////////
     // Sanity checked this routine (step) against Saad.
     /////////////////////////
@@ -155,8 +156,9 @@ public:
 	      DenseVector<Field>& evec,
 	      Field& w,int Nm,int k)
     {
-      assert( k< Nm );
+            assert( k< Nm );
       
+
       _poly(_Linop,evec[k],w);      // 3. wk:=Avk−βkv_{k−1}
       if(k>0){
 	w -= lme[k-1] * evec[k-1];
@@ -165,12 +167,13 @@ public:
       ComplexD zalph = innerProduct(evec[k],w); // 4. αk:=(wk,vk)
       RealD     alph = real(zalph);
 
+
       w = w - alph * evec[k];// 5. wk:=wk−αkvk
 
       RealD beta = normalise(w); // 6. βk+1 := ∥wk∥2. If βk+1 = 0 then Stop
                                  // 7. vk+1 := wk/βk+1
 
-//	std::cout << "alpha = " << zalph << " beta "<<beta<<std::endl;
+      //	std::cout << "alpha = " << zalph << " beta "<<beta<<std::endl;
       const RealD tiny = 1.0e-20;
       if ( beta < tiny ) { 
 	std::cout << " beta is tiny "<<beta<<std::endl;
@@ -516,9 +519,9 @@ until convergence
 	normalise(evec[0]);
 	std:: cout <<"norm2(evec[0])= " << norm2(evec[0]) <<std::endl;
 // << evec[0]._grid << std::endl;
-	
+
 	// Initial Nk steps
-	for(int k=0; k<Nk; ++k) step(eval,lme,evec,f,Nm,k);
+	for(int k=0; k<Nk; ++k) step(eval,lme,evec,f,Nm,k);                        //dead here
 //	std:: cout <<"norm2(evec[1])= " << norm2(evec[1]) << std::endl;
 //	std:: cout <<"norm2(evec[2])= " << norm2(evec[2]) << std::endl;
 	RitzMatrix(evec,Nk);
@@ -555,7 +558,7 @@ until convergence
 	  // Implicitly shifted QR transformations
 	  setUnit_Qt(Nm,Qt);
 	  for(int ip=k2; ip<Nm; ++ip){ 
-	std::cout << "qr_decomp "<< ip << " "<< eval2[ip] << std::endl;
+	    //	std::cout << "qr_decomp "<< ip << " "<< eval2[ip] << std::endl;
 	    qr_decomp(eval,lme,Nm,Nm,Qt,eval2[ip],k1,Nm);
 		
 	}
@@ -575,7 +578,7 @@ until convergence
 	  f += lme[k2-1] * evec[k2];
 	  beta_k = norm2(f);
 	  beta_k = sqrt(beta_k);
-	  std::cout<<" beta(k) = "<<beta_k<<std::endl;
+	  //	  std::cout<<" beta(k) = "<<beta_k<<std::endl;
 
 	  RealD betar = 1.0/beta_k;
 	  evec[k2] = betar * f;
@@ -614,9 +617,9 @@ until convergence
 	    RealD vv = norm2(v);
 	    
 	    std::cout.precision(13);
-	    std::cout << "[" << std::setw(3)<< std::setiosflags(std::ios_base::right) <<i<<"] ";
-	    std::cout << "eval = "<<std::setw(25)<< std::setiosflags(std::ios_base::left)<< eval2[i];
-	    std::cout <<" |H B[i] - eval[i]B[i]|^2 "<< std::setw(25)<< std::setiosflags(std::ios_base::right)<< vv<< std::endl;
+	    //	    std::cout << "[" << std::setw(3)<< std::setiosflags(std::ios_base::right) <<i<<"] ";
+	    //	    std::cout << "eval = "<<std::setw(25)<< std::setiosflags(std::ios_base::left)<< eval2[i];
+	    //	    std::cout <<" |H B[i] - eval[i]B[i]|^2 "<< std::setw(25)<< std::setiosflags(std::ios_base::right)<< vv<< std::endl;
 	    
 	// change the criteria as evals are supposed to be sorted, all evals smaller(larger) than Nstop should have converged
 	    if((vv<eresid*eresid) && (i == Nconv) ){
@@ -646,7 +649,7 @@ until convergence
          eval[i] = eval2[Iconv[i]];
          evec[i] = B[Iconv[i]];
        }
-      _sort.push(eval,evec,Nconv);
+             _sort.push(eval,evec,Nconv);
 
       std::cout << "\n Converged\n Summary :\n";
       std::cout << " -- Iterations  = "<< Nconv  << "\n";

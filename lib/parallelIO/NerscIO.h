@@ -149,8 +149,8 @@ inline void NerscMachineCharacteristics(NerscField &header)
       void operator() (fobj &in,sobj &out,uint32_t &csum){
 
       for(int mu=0;mu<4;mu++){
-      for(int i=0;i<3;i++){
-      for(int j=0;j<3;j++){
+      for(int i=0;i<Nc;i++){
+      for(int j=0;j<Nc;j++){
 	out(mu)()(i,j) = in(mu)()(i,j);
       }}}
       NerscChecksum((uint32_t *)&in,sizeof(in),csum); 
@@ -374,7 +374,10 @@ static inline void readConfiguration(Lattice<iLorentzColourMatrix<vsimd> > &Umu,
   assert(fabs(clone.plaquette -header.plaquette ) < 1.0e-5 );
   assert(fabs(clone.link_trace-header.link_trace) < 1.0e-6 );
 
-  assert(csum == header.checksum );
+  //begin - DP
+  std::cout<<GridLogMessage << "csum =  "<< csum << " header.checksum = " << header.checksum << std::endl;
+  //end - DP 
+    assert(csum == header.checksum );
 
   std::cout<<GridLogMessage <<"Read NERSC Configuration "<<file<< " and plaquette, link trace, and checksum agree"<<std::endl;
 }
