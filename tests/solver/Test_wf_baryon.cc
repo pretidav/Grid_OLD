@@ -65,11 +65,11 @@ int main (int argc, char ** argv)
 #define POINT_SOURCES
 
   
-  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_WG_lat"),
-                                                  std::string("ckpoint_WG_rng"), 1);
+  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_SU3new_lat"),
+                                                  std::string("ckpoint_SU3new_rng"), 1);
 
-  int CNFGSTART=20;//1
-  int CNFGEND=20;//100
+  int CNFGSTART=29;
+  int CNFGEND=29;
   int CNFGSTEP=1;
 
   
@@ -83,7 +83,7 @@ int main (int argc, char ** argv)
     LatticeGaugeField Up(&Grid); Up=zero;
     LatticeColourMatrix U(&Grid); U=zero;
     LatticeColourMatrix Up_mu(&Grid); Up_mu=zero;
-    SU3::LieRandomize(pRNG, Omega, 1.0);
+    SU<Nc>::LieRandomize(pRNG, Omega, 1.0);
     for (int mu=0;mu<Nd;mu++){
       U=peekLorentz(Umu,mu);
       ShiftedOmega=Cshift(Omega,mu,1);
@@ -241,51 +241,102 @@ WilsonFermionR Dw_s(Umu,Grid,RBGrid,m_s);
  RealD norm=1./Nnoise;
  Prop=Prop*norm;
 #endif
- 
- // \epsilon_{ijk}
+
+ int Nperm=3; //Nc!/2
+
  int ep[3][Nc];
  int em[3][Nc];
  int contp=0,contm=0;
- int S1,S2,S3;
- 
- for (int i=0;i<Nc;i++){
-   for (int j=0;j<Nc;j++){
-     for (int k=0;k<Nc;k++){
-       S1=Sign(i,j);
-       S2=Sign(j,k);
-       S3=Sign(i,k);
-       if ((S1*S2*S3)>0){
-	 ep[contp][0]=i;
-	 ep[contp][1]=j;
-	 ep[contp][2]=k;
-	 contp++;
-       }else if ((S1*S2*S3)<0){
-	 em[contm][0]=i;
-	 em[contm][1]=j;
-	 em[contm][2]=k;
-	 contm++;
+ int S1,S2,S3,S4,S5,S6;
+
+ if (Nc==3){
+  // qqq  with q in fund SU(3)
+   // \epsilon_{ijk}
+   for (int i=0;i<Nc;i++){
+     for (int j=0;j<Nc;j++){
+       for (int k=0;k<Nc;k++){
+	 S1=Sign(i,j);
+	 S2=Sign(j,k);
+	 S3=Sign(i,k);
+	 if ((S1*S2*S3)>0){
+	   ep[contp][0]=i;
+	   ep[contp][1]=j;
+	   ep[contp][2]=k;
+	   contp++;
+	 } else if ((S1*S2*S3)<0){
+	   em[contm][0]=i;
+	   em[contm][1]=j;
+	   em[contm][2]=k;
+	   contm++;
+	 }
+       }
+     }
+   }
+  } else if (Nc==4){
+ // qqQ with q in fund SU(4) and Q in twoindex anti-sym SU(4)
+   // \epsilon_{ijkl}
+   for (int i=0;i<Nc;i++){
+     for (int j=0;j<Nc;j++){
+       for (int k=0;k<Nc;k++){
+	 for (int l=0;l<Nc;l++){
+	   S1=Sign(i,j);
+	   S2=Sign(i,k);
+	   S3=Sign(i,l);
+	   S4=Sign(j,k);
+	   S5=Sign(j,l);
+	   S6=Sign(k,l);
+	   if ((S1*S2*S3*S4*S5*S6)>0){
+	     ep[contp][0]=i;
+	     ep[contp][1]=j;
+	     ep[contp][2]=k;
+	     ep[contp][3]=l;
+	     contp++;
+	   } else if ((S1*S2*S3*S4*S5*S6)<0){
+	     em[contm][0]=i;
+	     em[contm][1]=j;
+	     em[contm][2]=k;
+	     em[contm][3]=l;
+	     contm++;
+	   }
+	 }
        }
      }
    }
  }
  
- 
- //Check Projectors
  /*
-    for (int i=0;i<Nc;i++){
-      for (int j=0;j<Nc;j++){
-	std::cout<< "ep["<< i << "]["<< j << "]=" << ep[i][j] <<std::endl;
-      }
-    }
-    std::cout<<"-----"<<std::endl;
-    for (int i=0;i<Nc;i++){
-      for (int j=0;j<Nc;j++){
-	std::cout<< "em["<< i << "]["<< j << "]=" << em[i][j] <<std::endl;
-      }
-    }
+ for (int i=0;i<Nperm;i++){
+   for (int j=0;j<Nc;j++){
+     std::cout<< "ep["<< i << "]["<< j << "]=" << ep[i][j] <<std::endl;
+   }
+ }
+ std::cout<<"-----"<<std::endl;
+ for (int i=0;i<Nperm;i++){
+   for (int j=0;j<Nc;j++){
+     std::cout<< "em["<< i << "]["<< j << "]=" << em[i][j] <<std::endl;
+   }
+ }
  */
+ 
+
+ //Mapping (i,j) -> A , with i,j=1,...,4 and A=1,...,6
+ int A[Nc][Nc];
+ int cont=0; 
+ for (int a=1;a<Nc;a++){
+   for (int b=0;b<a;b++){
+     A[a][b]=cont;
+     cont++;
+   }
+ }
 
 
+ for (int a=0;a<Nc;a++){
+   for (int b=0;b<Nc;b++){
+     std::cout << "A[" << a << "]["<<b<<"]= "<<A[a][b]<<std::endl;
+   }
+ }
+
+ 
  //Correlators
  /* Baryon (llh):                                                                                                                                                                   
   e_{abc} e_{a'b'c'}  ( Tr[(Ga Ppm Ga) S^{light}_{ca'}]Tr[(Gb S^{heavy}_{bc'} Gb^T)^T S^{light}_{ab'}] -
@@ -300,24 +351,6 @@ WilsonFermionR Dw_s(Umu,Grid,RBGrid,m_s);
 
  const Gamma::GammaMatrix *g = Gamma::GammaMatrices;
  const char **list           = Gamma::GammaMatrixNames;
-
-
-
- //Lorentz Transformation pi/2 around z-axis (3)                                                                                                                                  
- /*
- LatticeColourMatrix U1(&Grid);
- LatticeColourMatrix U2(&Grid);
- U1=peekLorentz(Umu,1);
- U2=peekLorentz(Umu,2);
- pokeLorentz(U1,Umu,2);
- pokeLorentz(U2,Umu,1);
-
- SpinMatrix S;
- S=expMat( pi/8 * (Gamma1*Gamma2 - Gamma2*Gamma1) ,1, 1000);
- */
- //end transformation           
-
-
 
 
  
@@ -345,15 +378,14 @@ WilsonFermionR Dw_s(Umu,Grid,RBGrid,m_s);
  // Gb = Gamma(g[4])*(Gamma(g[2])*Gamma(g[5])); = C*g5
   Gb = makeGammaProd(10) * makeGammaProd(15);
  
- P = 0.5 * ( Id - makeGammaProd(8) ); 
+ P = 0.5 * ( Id + makeGammaProd(8) ); 
  
  // std::cout<< Gb << "--" << (Ga*P*Ga) << std::endl;
-  
  LatticeSpinMatrix Prop_ud1(&Grid); Prop_ud1 = zero;
  LatticeSpinMatrix Prop_ud2(&Grid); Prop_ud2 = zero;
  LatticeSpinMatrix Prop_s1(&Grid);  Prop_s1  = zero;
 
-#define notr
+#define tr
 
 #ifdef tr
  for (int i=0;i<3;i++){
@@ -439,7 +471,7 @@ WilsonFermionR Dw_s(Umu,Grid,RBGrid,m_s);
 		     //peekSpin
 		     GaA=Ga()(k,l)();
 		     GaB=Ga()(m,n)();
-		     Ppm=P()(m,l)();//lm
+		     Ppm=P()(l,m)();//lm
 		     GbA=Gb()(i,j)();
 		     GbB=Gb()(o,p)();
 		     Ds=peekSpin(Prop_s1,p,j);
@@ -562,6 +594,7 @@ WilsonFermionR Dw_s(Umu,Grid,RBGrid,m_s);
  } 
  sliceSum(C,Ct,3);
 #endif 
+
 
  std::cout << "t     <CC>" << std::endl;
  for (int t=0;t<T;t++){

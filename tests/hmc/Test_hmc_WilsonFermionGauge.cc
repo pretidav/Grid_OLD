@@ -58,9 +58,9 @@ class HmcRunner : public NerscHmcRunner {
     LatticeGaugeField U(UGrid);
 
     // Gauge action
-    WilsonGaugeActionR Waction(6.0);
+    WilsonGaugeActionR Waction(10.2);
 
-    Real mass = -0.80;
+    Real mass = -0.2;
     FermionAction FermOp(U, *FGrid, *FrbGrid, mass);
 
     ConjugateGradient<FermionField> CG(1.0e-8, 10000);

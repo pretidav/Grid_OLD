@@ -54,20 +54,20 @@ int main (int argc, char ** argv)
   GridSerialRNG    sRNG; 
 
   LatticeGaugeField Umu(&Grid); 
-  //    SU3::TepidConfiguration(pRNG, Umu);  
+  //    SU<Nc>::TepidConfiguration(pRNG, Umu);  
                                                                                                                                                                                     
 
-  RealD mass=0.166666666666667;
+  RealD mass=-1.2;
 
 
 #define POINT_SOURCES
 
   
-  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_WG_lat"),
-                                                  std::string("ckpoint_WG_rng"), 1);
+  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_lat"),
+                                                  std::string("ckpoint_rng"), 1);
   
-  int CNFGSTART=20;
-  int CNFGEND=20;
+  int CNFGSTART=100;
+  int CNFGEND=305;
   int CNFGSTEP=1;
 
   
@@ -94,7 +94,7 @@ WilsonFermionR Dw(Umu,Grid,RBGrid,mass);
       for (unsigned int c = 0; c < Nc; c++){
 	PropToFerm<LatticePropagator,LatticeFermion,qcd>(src_vec,src,s,c);
 	std::cout<< "s = " << s << "c = " << c << std::endl;
-	ConjugateGradient<LatticeFermion> CG(1.0e-6, 10000);
+	ConjugateGradient<LatticeFermion> CG(1.0e-12, 1000000);
 	LatticeFermion Psi(&Grid);
 	MdagMLinearOperator<WilsonFermionR, LatticeFermion> MdagMOp(Dw);
 	Psi = zero;
@@ -235,7 +235,7 @@ WilsonFermionR Dw(Umu,Grid,RBGrid,mass);
 	sliceSum(C,Ct,3);
 	std::cout << "t     <" << list[mu] << " x "<< list[nu] << ">" << std::endl;
 	for (int t=0;t<T;t++){
-	  std::cout << " " << t << "     " << TensorRemove(Ct[t])  << std::endl;
+	  std::cout << " " << t << "     " << TensorRemove(Ct[t]).real()  << "     " << TensorRemove(Ct[t]).imag() <<  std::endl;
 	}
       }
     }
@@ -247,7 +247,7 @@ WilsonFermionR Dw(Umu,Grid,RBGrid,mass);
         sliceSum(C,Ct,3);
 	std::cout << "t     <" << list[mu] << " x "<< list[nu+11] << ">" << std::endl;
         for (int t=0;t<T;t++){
-	  std::cout << " " << t << "     " << TensorRemove(Ct[t])  << std::endl;
+	  std::cout << " " << t << "     " << TensorRemove(Ct[t]).real()  << "     " << TensorRemove(Ct[t]).imag() << std::endl;
         }
       }
     }

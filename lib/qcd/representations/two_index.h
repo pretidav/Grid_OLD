@@ -33,8 +33,8 @@ class TwoIndexRep {
   typedef typename SU_TwoIndex<ncolour, S>::LatticeTwoIndexSpinColourMatrix LatticePropagator;
 
   struct parms{
-    static const int Ns = 3;
-    static const int Nc = 3;
+    static const int Ns = 4;
+    static const int Nc = 4; //change this if needed
     static const int Dim = Nc*(Nc+S)/2;
   };
 

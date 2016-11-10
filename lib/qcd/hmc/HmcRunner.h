@@ -86,7 +86,7 @@ class NerscHmcRunnerTemplate {
       NumTraj = ivec[0];
     }
 
-    int NumThermalizations = 40;
+    int NumThermalizations = 50;
     if (GridCmdOptionExists(argv, argv + argc, "--Thermalizations")) {
       arg = GridCmdOptionPayload(argv, argv + argc, "--Thermalizations");
       std::vector<int> ivec(0);
@@ -105,8 +105,8 @@ class NerscHmcRunnerTemplate {
     //example seed: SU2_2S run 1-> {52251{1:10}}
     //example seed: SU2_Adj run 1> {524611{1:10}}
 
-    std::vector<int> SerSeed({5424511, 5424512, 5424513, 5424514, 5424515});
-    std::vector<int> ParSeed({5424516, 5424517, 5424518, 5424519, 54245110});
+    std::vector<int> SerSeed({19881, 19882, 19883, 19884, 19885});
+    std::vector<int> ParSeed({19886, 19887, 19888, 19889, 198810});
 
     // Create integrator, including the smearing policy
     // Smearing policy, only defined for Nc=3
