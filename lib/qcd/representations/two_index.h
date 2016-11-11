@@ -34,7 +34,7 @@ class TwoIndexRep {
 
   struct parms{
     static const int Ns = 4;
-    static const int Nc = 4; //change this if needed
+    static const int Nc = 6; //change this if needed
     static const int Dim = Nc*(Nc+S)/2;
   };
 

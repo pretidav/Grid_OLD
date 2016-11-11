@@ -46,6 +46,7 @@ int main (int argc, char ** argv)
 {
   Grid_init(&argc,&argv);
 
+
   std::vector<int> latt_size   = GridDefaultLatt();
   std::vector<int> simd_layout = GridDefaultSimd(Nd,vComplex::Nsimd());
   std::vector<int> mpi_layout  = GridDefaultMpi();
@@ -67,41 +68,48 @@ int main (int argc, char ** argv)
 
 
 #define POINT_SOURCE
-  int Nperm=12; //Nc!/2   
-  int ep[12][Nc];
-  int em[12][Nc];
+  int Nperm=60; //Nc!/2   
+  int ep[60][Nc];
+  int em[60][Nc];
   int contp=0,contm=0;
-  int S1,S2,S3,S4,S5,S6;
-  // qqQ with q in fund SU(4) and Q in twoindex anti-sym SU(4)  
-  // \epsilon_{ijkl}                                                                                                                                                                
+  int S1,S2,S3,S4,S5,S6,S7,S8,S9,S10;
+  // qQQ with q in fund SU(5) and Q in twoindex anti-sym SU(5)  
+  // \epsilon_{ijklm}                                                                                                                                                                
   for (int i=0;i<Nc;i++){
     for (int j=0;j<Nc;j++){
       for (int k=0;k<Nc;k++){
 	for (int l=0;l<Nc;l++){
+	  for (int m=0;m<Nc;m++){
 	  S1=Sign(i,j);
 	  S2=Sign(i,k);
 	  S3=Sign(i,l);
-	  S4=Sign(j,k);
-	  S5=Sign(j,l);
-	  S6=Sign(k,l);
-	  if ((S1*S2*S3*S4*S5*S6)>0){
+	  S4=Sign(i,m);
+	  S5=Sign(j,k);
+	  S6=Sign(j,l);
+	  S7=Sign(j,m);
+	  S8=Sign(k,l);
+	  S9=Sign(k,m);
+	  S10=Sign(l,m);
+	  if ((S1*S2*S3*S4*S5*S6*S7*S8*S9*S10)>0){
 	    ep[contp][0]=i;
 	    ep[contp][1]=j;
 	    ep[contp][2]=k;
 	    ep[contp][3]=l;
+	    ep[contp][4]=m;
 	    contp++;
-	  } else if ((S1*S2*S3*S4*S5*S6)<0){
+	  } else if ((S1*S2*S3*S4*S5*S6*S7*S8*S9*S10)<0){
 	    em[contm][0]=i;
 	    em[contm][1]=j;
 	    em[contm][2]=k;
 	    em[contm][3]=l;
+	    em[contm][4]=m;
 	    contm++;
 	  }
 	}
       }
     }
   }
-  
+  }
   //Mapping (i,j) -> A , with i,j=1,...,4 and A=1,...,6
   int A[Nc][Nc];
   int cont=0;
@@ -130,11 +138,11 @@ int main (int argc, char ** argv)
 
   */
 
-  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_SU4_lat"),
-                                                  std::string("ckpoint_SU4_rng"), 1);
+  NerscHmcCheckpointer<PeriodicGimplR> Checkpoint(std::string("ckpoint_SU5_lat"),
+                                                  std::string("ckpoint_SU5_rng"), 1);
 
-  int CNFGSTART=33;
-  int CNFGEND=33;
+  int CNFGSTART=1;
+  int CNFGEND=1;
   int CNFGSTEP=1;
 
 
@@ -152,7 +160,7 @@ int main (int argc, char ** argv)
     Checkpoint.CheckpointRestore(cnfg,Umu, sRNG, pRNG);
 
     //Gauge Transformation 
-    /*
+    /*    
     LatticeColourMatrix Omega(&Grid);
     LatticeColourMatrix ShiftedOmega(&Grid);
     LatticeGaugeField Up(&Grid); Up=zero;
@@ -259,66 +267,59 @@ int main (int argc, char ** argv)
  P = 0.5 * ( Id + makeGammaProd(8) ); 
  
  // std::cout<< Gb << "--" << (Ga*P*Ga) << std::endl;
- LatticeSpinMatrix Prop_ud1(&Grid); Prop_ud1 = zero;
  LatticeSpinMatrix Prop_ud2(&Grid); Prop_ud2 = zero;
+ LatticeSpinMatrix Prop_s2(&Grid); Prop_s2 = zero;
  LatticeSpinMatrix Prop_s1(&Grid);  Prop_s1  = zero;
 
 #define tr
 
 #ifdef tr
- for (int i=0;i<12;i++){
-   for (int j=0;j<12;j++){
+ for (int i=0;i<60;i++){
+   for (int j=0;j<60;j++){
      // std::cout << " " << i << " " << j << "so far so good" << std::endl;
 
      //positive colours permutations
      Prop_s1=peekColour(Prop_s,A[ep[i][1]][ep[i][2]],A[ep[j][1]][ep[j][2]]);
-     Prop_ud1=peekColour(Prop_ud,ep[i][0],ep[j][0]);
-     Prop_ud2=peekColour(Prop_ud,ep[i][3],ep[j][3]);
+     Prop_s2=peekColour(Prop_s,A[ep[i][3]][ep[i][4]],A[ep[j][3]][ep[j][4]]);
+     Prop_ud2=peekColour(Prop_ud,ep[i][0],ep[j][0]);
 
-     Ctrtr += Sign(ep[i][2],ep[i][1])*Sign(ep[j][2],ep[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 ); 
-     Ctr += Sign(ep[i][2],ep[i][1])*Sign(ep[j][2],ep[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );  
-     //     Ctrtr +=  trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctr +=  trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Ctrtr += Sign(ep[i][2],ep[i][1])*Sign(ep[j][2],ep[j][1])*Sign(ep[i][4],ep[i][3])*Sign(ep[j][4],ep[j][3]) * trace( (Ga*P*Ga) * Prop_s2 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 ); 
+     Ctr += Sign(ep[i][2],ep[i][1])*Sign(ep[j][2],ep[j][1])*Sign(ep[i][4],ep[i][3])*Sign(ep[j][4],ep[j][3]) * trace( (Ga*P*Ga) * Prop_s2 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );  
 
      Prop_s1  = zero;
-     Prop_ud1 = zero;
+     Prop_s2 = zero;
      Prop_ud2 = zero;
 
      Prop_s1=peekColour(Prop_s,A[em[i][1]][em[i][2]],A[em[j][1]][em[j][2]]);
-     Prop_ud1=peekColour(Prop_ud,em[i][0],em[j][0]);
-     Prop_ud2=peekColour(Prop_ud,em[i][3],em[j][3]);
-     Ctrtr += Sign(em[i][2],em[i][1])*Sign(em[j][2],em[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     Ctr += Sign(em[i][2],em[i][1])*Sign(em[j][2],em[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctrtr +=  trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctr +=  trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Prop_s2=peekColour(Prop_s,A[em[i][3]][em[i][4]],A[em[j][3]][em[j][4]]);
+     Prop_ud2=peekColour(Prop_ud,em[i][0],em[j][0]);
+     Ctrtr += Sign(em[i][2],em[i][1])*Sign(em[j][2],em[j][1])*Sign(em[i][4],em[i][3])*Sign(em[j][4],em[j][3]) * trace( (Ga*P*Ga) * Prop_s2 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Ctr += Sign(em[i][2],em[i][1])*Sign(em[j][2],em[j][1])*Sign(em[i][4],em[i][3])*Sign(em[j][4],em[j][3]) * trace( (Ga*P*Ga) * Prop_s2 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+
 
      Prop_s1  = zero;
-     Prop_ud1 = zero;
+     Prop_s2 = zero;
      Prop_ud2 = zero;
 
      //negative colours permutations
      Prop_s1=peekColour(Prop_s,A[ep[i][1]][ep[i][2]],A[em[j][1]][em[j][2]]);
-     Prop_ud1=peekColour(Prop_ud,ep[i][0],em[j][0]);
-     Prop_ud2=peekColour(Prop_ud,ep[i][3],em[j][3]);
-     Ctrtr -= Sign(ep[i][2],ep[i][1])*Sign(em[j][2],em[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     Ctr -= Sign(ep[i][2],ep[i][1])*Sign(em[j][2],em[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctrtr -=  trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctr -=  trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-
+     Prop_s2=peekColour(Prop_s,A[ep[i][3]][ep[i][4]],A[em[j][3]][em[j][4]]);
+     Prop_ud2=peekColour(Prop_ud,ep[i][0],em[j][0]);
+     Ctrtr -= Sign(ep[i][2],ep[i][1])*Sign(em[j][2],em[j][1])*Sign(ep[i][4],ep[i][3])*Sign(em[j][4],em[j][3]) * trace( (Ga*P*Ga) * Prop_s2 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Ctr -= Sign(ep[i][2],ep[i][1])*Sign(em[j][2],em[j][1])*Sign(ep[i][4],ep[i][3])*Sign(em[j][4],em[j][3]) * trace( (Ga*P*Ga) * Prop_s2 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+   
      Prop_s1  = zero;
-     Prop_ud1 = zero;
+     Prop_s2 = zero;
      Prop_ud2 = zero;
 
      Prop_s1=peekColour(Prop_s,A[em[i][1]][em[i][2]],A[ep[j][1]][ep[j][2]]);
-     Prop_ud1=peekColour(Prop_ud,em[i][0],ep[j][0]);
-     Prop_ud2=peekColour(Prop_ud,em[i][3],ep[j][3]);
-     Ctrtr -= Sign(em[i][2],em[i][1])*Sign(ep[j][2],ep[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     Ctr -= Sign(em[i][2],em[i][1])*Sign(ep[j][2],ep[j][1]) * trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctrtr -=  trace( (Ga*P*Ga) * Prop_ud1 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
-     //     Ctr -=  trace( (Ga*P*Ga) * Prop_ud1 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Prop_s2=peekColour(Prop_s,A[em[i][3]][em[i][4]],A[ep[j][3]][ep[j][4]]);
+     Prop_ud2=peekColour(Prop_ud,em[i][0],ep[j][0]);
+     Ctrtr -= Sign(em[i][2],em[i][1])*Sign(ep[j][2],ep[j][1])*Sign(em[i][4],em[i][3])*Sign(ep[j][4],ep[j][3]) * trace( (Ga*P*Ga) * Prop_s2 ) * trace( transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
+     Ctr -= Sign(em[i][2],em[i][1])*Sign(ep[j][2],ep[j][1])*Sign(em[i][4],em[i][3])*Sign(ep[j][4],ep[j][3]) * trace( (Ga*P*Ga) * Prop_s2 * transpose(Gb*Prop_s1*transpose(Gb)) * Prop_ud2 );
 
      Prop_s1  = zero;
-     Prop_ud1 = zero;
+     Prop_s2 = zero;
      Prop_ud2 = zero;
 
    }
@@ -491,5 +492,5 @@ int main (int argc, char ** argv)
  
   } 
   Grid_finalize();
-}
+  }
 
